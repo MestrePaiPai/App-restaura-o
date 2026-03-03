@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+enum TableStatus {
+  OPEN
+  CLOSED
+}
+
+enum OrderStatus {
+  NEW
+  ACCEPTED
+  PREPARING
+  READY
+  SERVED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  MBWAY
+  MULTIBANCO
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+model Table {
+  id       String      @id @default(cuid())
+  number   String      @unique
+  token    String      @unique
+  status   TableStatus @default(OPEN)
+  openedAt DateTime    @default(now())
+  closedAt DateTime?
+  orders   Order[]
+  payments PaymentIntent[]
+}
+
+model MenuCategory {
+  id        String     @id @default(cuid())
+  name      String
+  sortOrder Int        @default(0)
+  active    Boolean    @default(true)
+  items     MenuItem[]
+}
+
+model MenuItem {
+  id          String       @id @default(cuid())
+  categoryId  String
+  category    MenuCategory @relation(fields: [categoryId], references: [id])
+  name        String
+  description String
+  priceCents  Int
+  vatRate     Int
+  imageUrl    String?
+  active      Boolean      @default(true)
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  tableId   String
+  table     Table       @relation(fields: [tableId], references: [id])
+  status    OrderStatus @default(NEW)
+  createdAt DateTime    @default(now())
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id             String   @id @default(cuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id])
+  menuItemId     String
+  menuItem       MenuItem @relation(fields: [menuItemId], references: [id])
+  qty            Int
+  unitPriceCents Int
+  vatRate        Int
+  notes          String?
+}
+
+model PaymentIntent {
+  id            String        @id @default(cuid())
+  tableId        String
+  table          Table         @relation(fields: [tableId], references: [id])
+  method         PaymentMethod
+  amountCents    Int
+  status         PaymentStatus @default(PENDING)
+  reference      String?
+  customerPhone  String?
+  createdAt      DateTime      @default(now())
+  confirmedAt    DateTime?
+}
+
+model Settings {
+  id                  String @id @default("singleton")
+  restaurantName      String @default("Restaurante Demo")
+  currency            String @default("EUR")
+  mbwayNumber         String @default("9XXXXXXXX")
+  mbwayInstructions   String @default("Efetue o pagamento por MBWay e mostre ao staff.")
+  multibancoEntity    String @default("12345")
+  multibancoInfo      String @default("Use a referência gerada para identificação.")
+}
