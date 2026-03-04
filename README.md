@@ -1,46 +1,65 @@
 # Restaurante QR PWA (Next.js 14)
 
-MVP completo para restaurante com QR por mesa, cliente sem login e backoffice para staff/admin.
+MVP para restaurante com QR por mesa, cliente sem login e backoffice para staff/admin.
 
 ## Stack
 - Next.js 14 (App Router) + TypeScript
-- Tailwind
+- Tailwind CSS
 - Prisma + PostgreSQL
 - NextAuth (Credentials)
 - PWA via `next-pwa`
-- Realtime preparado com polling (4s) e APIs prontas para evolução para WebSocket.
+- Realtime por polling (4s), pronto para evoluir para WebSocket
 
 ## Funcionalidades
 ### Cliente (`/t/{token}`)
-- Menu por pesquisa, carrinho e envio de pedidos.
-- Observações por item suportadas na API.
-- Estado de pedidos e conta total da mesa.
-- Pedido de pagamento (Dinheiro, MBWay, Multibanco) cria `PaymentIntent` interno.
+- Ver menu e pesquisar itens
+- Carrinho e envio de pedidos
+- Ver estado dos pedidos
+- Ver conta total da mesa
+- Pedir pagamento (Dinheiro / MBWay / Multibanco)
 
 ### Staff
-- `/staff/orders`: lista de pedidos e mudança de estado (`NEW -> ... -> SERVED`).
-- `/staff/payments`: confirmação manual de pagamentos pendentes.
-- `/staff/tables/[id]`: visão resumida da mesa.
+- `/staff/orders`: ver pedidos e atualizar estado
+- `/staff/payments`: confirmar pagamentos pendentes
+- `/staff/tables/[id]`: visão resumida por mesa
 
 ### Admin
-- `/admin/menu`: CRUD base de categorias e itens.
-- `/admin/tables`: criação de mesas e página de impressão de QRs.
-- `/admin/users`: criação de utilizadores staff/admin.
-- `/admin/settings`: dados do restaurante e pagamentos.
+- `/admin/menu`: CRUD base de categorias e itens
+- `/admin/tables`: criar mesas + imprimir QRs
+- `/admin/users`: gerir utilizadores
+- `/admin/settings`: configurações de restaurante/pagamento
 
 ## Segurança e decisões
-- Tokens de mesa com `nanoid(32)` não sequencial.
-- Validação com Zod nas APIs públicas.
-- Preço calculado sempre no servidor (não confia no cliente).
-- Rate limit público simples em memória por IP/header.
-- MVP de pagamentos com confirmação manual pelo staff (sem dependências externas).
+- Token de mesa não sequencial (`nanoid(32)`)
+- Validação com Zod nas APIs públicas
+- Preço e total calculados no servidor
+- Rate limit público simples (memória)
+- Pagamentos em modo manual (staff confirma)
 
-## Setup local
-1. Copiar env:
+---
+
+## Pré-requisitos (IMPORTANTE)
+Se recebeu erros como:
+- `'cp' is not recognized...`
+- `'docker' is not recognized...`
+- `'npm' is not recognized...`
+
+isso significa que as ferramentas não estão instaladas ou não estão no `PATH`.
+
+Instale:
+1. **Node.js 20+** (inclui `npm`): https://nodejs.org/
+2. **Docker Desktop** (opcional, para Postgres em container): https://www.docker.com/products/docker-desktop/
+
+Depois reabra o terminal.
+
+---
+
+## Setup local (macOS/Linux)
+1. Criar `.env`:
 ```bash
 cp .env.example .env
 ```
-2. Subir Postgres:
+2. Subir PostgreSQL:
 ```bash
 docker compose up -d
 ```
@@ -59,11 +78,47 @@ npm run prisma:seed
 npm run dev
 ```
 
+## Setup local (Windows - PowerShell)
+1. Criar `.env`:
+```powershell
+Copy-Item .env.example .env
+```
+2. Subir PostgreSQL (com Docker Desktop):
+```powershell
+docker compose up -d
+```
+3. Instalar dependências:
+```powershell
+npm install
+```
+4. Prisma:
+```powershell
+npm run prisma:generate
+npx prisma migrate dev --name init
+npm run prisma:seed
+```
+5. Correr app:
+```powershell
+npm run dev
+```
+
+## Sem Docker (alternativa)
+Se não tiver Docker, pode usar PostgreSQL instalado localmente:
+1. Instale PostgreSQL.
+2. Ajuste `DATABASE_URL` no `.env`.
+3. Execute apenas:
+```bash
+npm run prisma:generate
+npx prisma migrate dev --name init
+npm run prisma:seed
+npm run dev
+```
+
 ## Credenciais seed
 - Admin: `admin@rest.local` / `Admin123!`
 - Staff: `staff@rest.local` / `Staff123!`
 
 ## PWA
-- Manifest em `public/manifest.json`
-- Ícone vetorial (sem ficheiros binários) em `public/icon.svg`
-- Cache mínimo para endpoint de menu público.
+- Manifest: `public/manifest.json`
+- Ícone vetorial (sem binários): `public/icon.svg`
+- Cache mínimo do endpoint de menu público
