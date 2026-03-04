@@ -114,6 +114,22 @@ npm run prisma:seed
 npm run dev
 ```
 
+
+## Como navegar na interface
+1. Abrir `http://localhost:3000` para ver a página inicial com atalhos e explicações.
+2. Clicar numa mesa demo para entrar como cliente (sem login).
+3. Para backoffice, clicar em **Entrar** e usar credenciais seed.
+4. Staff: `/staff/orders` e `/staff/payments`.
+5. Admin: `/admin/menu`, `/admin/tables`, `/admin/users`, `/admin/settings`.
+
+## Nota sobre PWA em desenvolvimento
+Se aparecer no terminal `"[PWA] PWA support is disabled"`, está correto: o `next-pwa` fica desligado no `next dev` por design.
+Para testar PWA ativa use:
+```bash
+npm run build
+npm run start
+```
+
 ## Credenciais seed
 - Admin: `admin@rest.local` / `Admin123!`
 - Staff: `staff@rest.local` / `Staff123!`
