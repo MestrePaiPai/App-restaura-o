@@ -77,6 +77,7 @@ model MenuItem {
   vatRate     Int
   imageUrl    String?
   active      Boolean      @default(true)
+  orderItems  OrderItem[]
 }
 
 model Order {
