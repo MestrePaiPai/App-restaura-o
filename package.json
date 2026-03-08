@@ -10,7 +10,11 @@
     "test": "vitest run",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "tsx prisma/seed.ts",
+    "desktop:dev": "concurrently -k \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "desktop:build:web": "next build",
+    "desktop:dist": "npm run desktop:build:web && electron-builder --win nsis --config.win.target=nsis",
+    "desktop:dist:portable": "npm run desktop:build:web && electron-builder --win portable --config.win.target=portable"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -41,6 +45,45 @@
     "tailwindcss": "^3.4.15",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "concurrently": "^9.1.2",
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.restaurantedemo.desktop",
+    "productName": "Restaurante Demo",
+    "asarUnpack": [
+      "node_modules/next/**"
+    ],
+    "files": [
+      "app/**",
+      "lib/**",
+      "auth.ts",
+      "middleware.ts",
+      "next.config.mjs",
+      "package.json",
+      "public/**",
+      ".next/**",
+      "node_modules/**",
+      "prisma/**"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "Restaurante-Demo-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Restaurante Demo"
+    }
   }
 }

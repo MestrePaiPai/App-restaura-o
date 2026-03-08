@@ -148,6 +148,27 @@ npm run start
 - Admin: `admin@rest.local` / `Admin123!`
 - Staff: `staff@rest.local` / `Staff123!`
 
+## Versão executável (instalador com janelas "Avançar")
+Este projeto também suporta distribuição como programa clássico de desktop (Windows), com instalador NSIS.
+
+### Para utilizador final
+- O instalador será um ficheiro tipo `Restaurante-Demo-Setup-x.y.z.exe`.
+- Basta abrir o `.exe` e seguir o assistente (**Next / Avançar**), escolher pasta e concluir.
+- No fim, a app abre com interface gráfica (janela desktop).
+
+### Para gerar o instalador (equipa técnica)
+```bash
+npm install
+npm run desktop:dist
+```
+O instalador fica na pasta `dist/`.
+
+### Executar em modo desktop durante desenvolvimento
+```bash
+npm install
+npm run desktop:dev
+```
+
 ## PWA
 - Manifest: `public/manifest.json`
 - Ícone vetorial (sem binários): `public/icon.svg`
