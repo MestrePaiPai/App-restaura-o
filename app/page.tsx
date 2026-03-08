@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
+import { isPrismaReady, prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
 async function getDemoTables() {
+  if (!isPrismaReady()) return [];
   try {
     return await prisma.table.findMany({ select: { number: true, token: true }, orderBy: { number: 'asc' }, take: 5 });
   } catch {
@@ -40,7 +41,7 @@ export default async function Home() {
               ))
             ) : (
               <p className="rounded border border-amber-200 bg-amber-50 p-2 text-sm text-amber-700">
-                Sem mesas seed disponíveis. Execute o seed para gerar mesas de demonstração.
+                Sem mesas disponíveis. Se aparecer erro de Prisma, execute: npm run prisma:generate
               </p>
             )}
           </div>

@@ -115,6 +115,20 @@ npm run dev
 ```
 
 
+
+## Erro comum: "@prisma/client did not initialize yet"
+Se vir este erro, faça:
+```bash
+npm run prisma:generate
+```
+Depois reinicie o servidor (`npm run dev`).
+
+Se ainda falhar, execute também:
+```bash
+npx prisma migrate dev --name init
+npm run prisma:seed
+```
+
 ## Como navegar na interface
 1. Abrir `http://localhost:3000` para ver a página inicial com atalhos e explicações.
 2. Clicar numa mesa demo para entrar como cliente (sem login).
