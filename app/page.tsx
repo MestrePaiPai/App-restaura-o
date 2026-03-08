@@ -1,20 +1,6 @@
 import Link from 'next/link';
-import { isPrismaReady, prisma } from '@/lib/prisma';
 
-export const dynamic = 'force-dynamic';
-
-async function getDemoTables() {
-  if (!isPrismaReady()) return [];
-  try {
-    return await prisma.table.findMany({ select: { number: true, token: true }, orderBy: { number: 'asc' }, take: 5 });
-  } catch {
-    return [];
-  }
-}
-
-export default async function Home() {
-  const tables = await getDemoTables();
-
+export default function Home() {
   return (
     <main className="mx-auto max-w-4xl p-6">
       <h1 className="text-3xl font-bold">Restaurante Demo</h1>
@@ -26,25 +12,11 @@ export default async function Home() {
         <section className="rounded-xl border bg-white p-4 shadow-sm">
           <h2 className="text-xl font-semibold">1) Área Cliente</h2>
           <p className="mt-2 text-sm text-slate-600">
-            O cliente entra por um link de mesa: <code>/t/&lt;token&gt;</code>, vê menu, faz pedido e pede conta.
+            Para entrar como cliente use um URL de mesa com token: <code>/t/&lt;token&gt;</code>.
           </p>
-          <div className="mt-3 space-y-2">
-            {tables.length > 0 ? (
-              tables.map((table) => (
-                <Link
-                  key={table.token}
-                  href={`/t/${table.token}`}
-                  className="block rounded border px-3 py-2 text-sm hover:bg-slate-50"
-                >
-                  Abrir mesa {table.number}
-                </Link>
-              ))
-            ) : (
-              <p className="rounded border border-amber-200 bg-amber-50 p-2 text-sm text-amber-700">
-                Sem mesas disponíveis. Se aparecer erro de Prisma, execute: npm run prisma:generate
-              </p>
-            )}
-          </div>
+          <p className="mt-2 rounded border border-amber-200 bg-amber-50 p-2 text-sm text-amber-700">
+            Dica: obtenha tokens em <b>Admin → Mesas</b> (depois do login e seed da base de dados).
+          </p>
         </section>
 
         <section className="rounded-xl border bg-white p-4 shadow-sm">

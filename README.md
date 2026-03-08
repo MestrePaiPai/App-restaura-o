@@ -117,6 +117,8 @@ npm run dev
 
 
 ## Erro comum: "@prisma/client did not initialize yet"
+A página inicial (`/`) já não depende de Prisma para abrir, mesmo sem base de dados pronta.
+
 Se vir este erro, faça:
 ```bash
 npm run prisma:generate
