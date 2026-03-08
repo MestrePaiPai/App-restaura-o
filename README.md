@@ -165,6 +165,13 @@ npm run desktop:dist
 ```
 O instalador fica na pasta `dist/`.
 
+### Gerar `.exe` diretamente na pasta principal
+Se quer o instalador na raiz do projeto, use:
+```bash
+npm run desktop:dist:exe-root
+```
+No final será criado: `./Instalar-Restaurante-Demo.exe`
+
 ### Executar em modo desktop durante desenvolvimento
 ```bash
 npm install

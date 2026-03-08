@@ -14,7 +14,8 @@
     "desktop:dev": "concurrently -k \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
     "desktop:build:web": "next build",
     "desktop:dist": "npm run desktop:build:web && electron-builder --win nsis --config.win.target=nsis",
-    "desktop:dist:portable": "npm run desktop:build:web && electron-builder --win portable --config.win.target=portable"
+    "desktop:dist:portable": "npm run desktop:build:web && electron-builder --win portable --config.win.target=portable",
+    "desktop:dist:exe-root": "npm run desktop:dist && node scripts/copy-installer-to-root.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -71,7 +72,8 @@
       "prisma/**"
     ],
     "directories": {
-      "buildResources": "public"
+      "buildResources": "public",
+      "output": "dist"
     },
     "win": {
       "target": [
